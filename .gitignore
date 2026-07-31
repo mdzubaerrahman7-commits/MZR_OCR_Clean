@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+
+# Generated pipeline outputs (reproducible via `python3 main.py`)
+OCR_OUTPUT/*
+CLEANED_DATA/*
+EXCEL_ANALYSIS/*
+!OCR_OUTPUT/.gitkeep
+!CLEANED_DATA/.gitkeep
+!EXCEL_ANALYSIS/.gitkeep
