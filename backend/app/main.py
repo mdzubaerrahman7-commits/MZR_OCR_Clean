@@ -20,7 +20,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
-    allow_credentials=True,
+    # The frontend never sends cookies (auth is a bearer token in an Authorization
+    # header, added explicitly per request) — no browser request from this app is
+    # ever "credentialed", so this is accurately False rather than a formality.
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -17,7 +17,12 @@ import type {
   User,
 } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// Accepts either a full URL ("https://api.example.com") or a bare hostname
+// ("bondaudit-backend.onrender.com") — Render's Blueprint `fromService` cross-service
+// references only ever resolve to a bare host, never a scheme, so this has to cope
+// with both rather than assume every deployment target hands us a complete URL.
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_URL = /^https?:\/\//.test(RAW_API_URL) ? RAW_API_URL : `https://${RAW_API_URL}`;
 const TOKEN_STORAGE_KEY = "bondaudit_token";
 
 export function getToken(): string | null {
