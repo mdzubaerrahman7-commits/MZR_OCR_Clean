@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy import DateTime, ForeignKey, Numeric, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import FindingIssueType, FindingReviewStatus
@@ -31,3 +31,5 @@ class Finding(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     review_status: Mapped[str] = mapped_column(String(32), nullable=False, default=FindingReviewStatus.OPEN)
     reviewed_by: Mapped[str | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    import_transaction: Mapped["ImportTransaction | None"] = relationship(viewonly=True)  # noqa: F821
