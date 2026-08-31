@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers import audits, auth, bill_of_entries, companies, conversion, documents, entitlements, imports, matching, rules
+from app.api.routers import audits, auth, bill_of_entries, companies, conversion, documents, entitlements, findings, imports, matching, rules
 from app.core.config import get_settings
 
 settings = get_settings()
@@ -31,6 +31,7 @@ app.include_router(bill_of_entries.router)
 app.include_router(matching.audit_router)
 app.include_router(conversion.router)
 app.include_router(rules.router)
+app.include_router(findings.router)
 
 
 @app.get("/api/health", tags=["health"])
