@@ -34,7 +34,7 @@ export default function EntitlementPage() {
           <CardTitle>Entitlement Master</CardTitle>
           <CardDescription>
             Preserves the exact group and item sequence from the entitlement sheet (spec section 17) — never sorted
-            alphabetically. Build this from Documents & Mapping after confirming the entitlement sheet's column mapping.
+            alphabetically. Build this from Documents & Mapping after confirming the entitlement sheet&apos;s column mapping.
           </CardDescription>
         </CardHeader>
         <CardContent>
