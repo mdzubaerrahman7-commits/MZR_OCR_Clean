@@ -89,3 +89,13 @@ def viewer_user(db_session: Session) -> User:
 @pytest.fixture()
 def viewer_headers(viewer_user) -> dict[str, str]:
     return auth_headers(viewer_user)
+
+
+@pytest.fixture()
+def reviewer_user(db_session: Session) -> User:
+    return make_user(db_session, role=Role.REVIEWER, email="reviewer@example.com")
+
+
+@pytest.fixture()
+def reviewer_headers(reviewer_user) -> dict[str, str]:
+    return auth_headers(reviewer_user)

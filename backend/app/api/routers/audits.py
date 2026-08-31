@@ -18,7 +18,7 @@ router = APIRouter(prefix="/api/audits", tags=["audits"])
 def create_audit(
     payload: AuditCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_permission(Permission.MANAGE_COMPANIES)),
+    current_user: User = Depends(require_permission(Permission.MANAGE_AUDITS)),
 ) -> Audit:
     if db.get(Company, payload.company_id) is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
