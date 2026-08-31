@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db, require_permission
+from app.api.mapping_helpers import get_confirmed_mapping
 from app.api.routers.audits import ensure_audit_not_locked, get_audit_or_404
 from app.api.routers.documents import get_document_or_404
 from app.core.permissions import Permission
-from app.models.document import DocumentColumnMapping
 from app.models.entitlement import EntitlementGroup, EntitlementItem
 from app.models.user import User
 from app.schemas.entitlement import EntitlementGroupOut, ParseEntitlementRequest, ParseEntitlementResult
@@ -13,20 +13,6 @@ from app.services import audit_trail, excel_intelligence, storage
 from app.services.entitlement_engine import parse_entitlement_rows
 
 router = APIRouter(prefix="/api/audits/{audit_id}/entitlement", tags=["entitlement"])
-
-
-def _get_confirmed_mapping(db: Session, document_id: str, sheet_name: str) -> dict[str, str]:
-    rows = (
-        db.query(DocumentColumnMapping)
-        .filter(DocumentColumnMapping.source_document_id == document_id, DocumentColumnMapping.sheet_name == sheet_name)
-        .all()
-    )
-    if not rows:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No confirmed column mapping for this document/sheet — confirm mapping before parsing (spec M03).",
-        )
-    return {row.source_header: row.target_field for row in rows}
 
 
 @router.post("/parse", response_model=ParseEntitlementResult)
@@ -44,7 +30,7 @@ def parse_entitlement(
     ensure_audit_not_locked(audit)
     document = get_document_or_404(db, audit_id, payload.source_document_id)
 
-    column_mapping = _get_confirmed_mapping(db, document.id, payload.sheet_name)
+    column_mapping = get_confirmed_mapping(db, document.id, payload.sheet_name)
     backend = storage.get_storage_backend()
     content = backend.read(document.storage_key)
     detection = excel_intelligence.detect_header_row(content, payload.sheet_name)

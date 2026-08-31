@@ -18,7 +18,23 @@ class BillOfEntry(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     be_number: Mapped[str] = mapped_column(String(64), nullable=False)
     be_date: Mapped[date] = mapped_column(Date, nullable=False)
     conversion_evidence: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    # USD value of 1 unit of the transaction's original_currency, sourced from this B/E.
+    # usd_value = original_currency_value * exchange_rate. Null means "no B/E rate on
+    # file yet" — conversion_engine must not substitute a market rate (spec section 12).
+    exchange_rate: Mapped[Decimal | None] = mapped_column(Numeric(20, 8), nullable=True)
     exchange_rate_evidence: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    # KG equivalent of 1 declared_unit, sourced from this B/E (spec section 11: "A KG
+    # quantity must also be presented where required").
+    kg_conversion_factor: Mapped[Decimal | None] = mapped_column(Numeric(20, 8), nullable=True)
+    kg_conversion_evidence: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    # entitlement_unit quantity per 1 declared_unit, only needed when declared_unit !=
+    # the matched entitlement item's unit.
+    entitlement_conversion_factor: Mapped[Decimal | None] = mapped_column(Numeric(20, 8), nullable=True)
+    entitlement_conversion_evidence: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     assessable_value: Mapped[Decimal | None] = mapped_column(Numeric(20, 4), nullable=True)
     source_document_id: Mapped[str | None] = mapped_column(ForeignKey("source_documents.id"), nullable=True)
 

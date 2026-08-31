@@ -57,3 +57,18 @@ def to_text(value: object) -> str | None:
         return None
     text = str(value).strip()
     return text or None
+
+
+def json_safe_row(values: dict) -> dict:
+    """Convert a raw spreadsheet row (openpyxl cell values: str/int/float/datetime/None)
+    into something a JSON column can store verbatim, without losing any value —
+    this is the Layer A raw-evidence payload, so nothing here may be dropped."""
+    safe: dict = {}
+    for key, value in values.items():
+        if isinstance(value, Decimal):
+            safe[key] = str(value)
+        elif isinstance(value, (datetime, date)):
+            safe[key] = value.isoformat()
+        else:
+            safe[key] = value
+    return safe
