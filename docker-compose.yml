@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: bondaudit
+      POSTGRES_PASSWORD: bondaudit
+      POSTGRES_DB: bondaudit
+    ports:
+      - "5432:5432"
+    volumes:
+      - bondaudit_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bondaudit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://bondaudit:bondaudit@postgres:5432/bondaudit
+      JWT_SECRET_KEY: dev-only-secret-change-me
+      STORAGE_BACKEND: local
+      STORAGE_LOCAL_ROOT: /data/evidence_storage
+      CORS_ORIGINS: '["http://localhost:3000"]'
+    volumes:
+      - bondaudit_evidence:/data/evidence_storage
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+
+volumes:
+  bondaudit_postgres_data:
+  bondaudit_evidence:
