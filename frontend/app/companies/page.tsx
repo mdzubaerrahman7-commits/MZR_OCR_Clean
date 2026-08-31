@@ -117,7 +117,7 @@ function NewCompanyForm({ onCreated }: { onCreated: () => void }) {
         <CardTitle>New company</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="name">Company name</Label>
             <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -134,16 +134,16 @@ function NewCompanyForm({ onCreated }: { onCreated: () => void }) {
             <Label htmlFor="facility">Facility type</Label>
             <Input id="facility" value={facilityType} onChange={(e) => setFacilityType(e.target.value)} />
           </div>
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <Label htmlFor="address">Address</Label>
             <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
           </div>
           {error && (
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <Alert>{error}</Alert>
             </div>
           )}
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <Button type="submit" disabled={submitting}>
               {submitting ? "Creating…" : "Create company"}
             </Button>

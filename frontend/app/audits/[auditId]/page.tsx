@@ -57,7 +57,7 @@ export default function AuditOverviewPage() {
         <div className="flex flex-col gap-4">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <CardTitle>
                     {audit.audit_code} — {audit.title}
@@ -85,7 +85,7 @@ export default function AuditOverviewPage() {
               <CardDescription>Follow the tabs above in this order.</CardDescription>
             </CardHeader>
             <CardContent>
-              <ol className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm text-muted-foreground">
+              <ol className="grid grid-cols-1 gap-x-8 gap-y-1 text-sm text-muted-foreground sm:grid-cols-2">
                 {WORKFLOW_STEPS.map((step, i) => (
                   <li key={step}>
                     {i + 1}. {step}
@@ -95,7 +95,7 @@ export default function AuditOverviewPage() {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Link href={`/audits/${auditId}/documents`}>
               <Card className="cursor-pointer hover:bg-muted"><CardContent className="p-4">Upload & map documents</CardContent></Card>
             </Link>

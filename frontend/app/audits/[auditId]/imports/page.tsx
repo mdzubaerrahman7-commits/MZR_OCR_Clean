@@ -75,9 +75,9 @@ export default function ImportsPage() {
 
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <CardTitle>Import transactions</CardTitle>
-            <div className="flex items-center gap-3 text-sm">
+            <div className="flex flex-wrap items-center gap-3 text-sm">
               <Select value={classificationFilter} onChange={(e) => setClassificationFilter(e.target.value)} className="w-40">
                 <option value="">All classifications</option>
                 <option value="raw_material">Raw Material</option>

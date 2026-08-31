@@ -22,12 +22,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6">
           <Link href="/companies" className="font-semibold">
             BondAudit <span className="text-muted-foreground font-normal">— Import Audit</span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
-            <span className="text-muted-foreground">
+            <span className="hidden text-muted-foreground sm:inline">
               {user.full_name} · <span className="uppercase">{user.role}</span>
             </span>
             <Button variant="outline" size="sm" onClick={logout}>
@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-6 py-6">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">{children}</main>
     </div>
   );
 }

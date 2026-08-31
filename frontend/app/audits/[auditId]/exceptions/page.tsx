@@ -38,7 +38,7 @@ export default function ExceptionsPage() {
       {error && <Alert className="mb-4">{error}</Alert>}
       {data && (
         <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-3 gap-4 md:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
             {CONTROLS.map((c) => (
               <Card key={c.key}>
                 <CardContent className="p-4">

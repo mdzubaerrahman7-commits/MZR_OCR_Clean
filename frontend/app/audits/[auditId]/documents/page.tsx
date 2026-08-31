@@ -134,7 +134,7 @@ export default function DocumentsPage() {
           <CardTitle>Upload document</CardTitle>
           <CardDescription>Entitlement sheet, Import MIS, or other bond audit evidence.</CardDescription>
         </CardHeader>
-        <CardContent className="flex items-end gap-4">
+        <CardContent className="flex flex-wrap items-end gap-4">
           <div>
             <Label htmlFor="doc_type">Document type</Label>
             <Select id="doc_type" value={documentType} onChange={(e) => setDocumentType(e.target.value as DocumentType)}>

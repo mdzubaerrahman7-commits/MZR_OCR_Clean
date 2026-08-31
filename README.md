@@ -18,7 +18,8 @@ predates this application — see the bottom of this file.
 - **Backend**: FastAPI (Python 3.11), SQLAlchemy 2.0, Alembic, pandas + openpyxl for
   spreadsheet parsing, PostgreSQL in every real environment (SQLite only for fast unit
   tests).
-- **Frontend**: Next.js (App Router) + TypeScript + Tailwind CSS.
+- **Frontend**: Next.js (App Router) + TypeScript + Tailwind CSS. Installable as a PWA
+  on desktop and mobile — see "Installing as an app" below.
 - **Auth**: self-contained JWT auth with the 4-role model from the spec
   (Administrator / Auditor / Reviewer / Viewer) — see "Known gaps" below for why this
   isn't Supabase Auth yet.
@@ -47,6 +48,26 @@ The backend runs `alembic upgrade head` on startup.
 First run: open the frontend, use "First time setting this up? Create the admin
 account" on the login page to bootstrap an Administrator (this path only works while
 zero users exist).
+
+## Installing as an app (PWA)
+
+The frontend is an installable Progressive Web App — same codebase, no separate
+mobile build:
+
+- **Desktop (Chrome/Edge)**: an install icon appears in the address bar; or use the
+  browser menu → "Install BondAudit…". It opens in its own window, pinned to the
+  taskbar/dock/Start menu like a native app.
+- **Android (Chrome)**: browser menu → "Add to Home screen" / "Install app".
+- **iOS/iPadOS (Safari)**: Share button → "Add to Home Screen". (Safari doesn't show
+  Chrome's install prompt, but the app still launches full-screen from the home
+  screen icon.)
+
+Installability requires HTTPS in production (a plain `localhost` dev server is
+exempted by browsers for testing). The service worker (`frontend/public/sw.js`) is
+intentionally minimal — it only makes the app installable and shows a friendly
+offline page if the connection drops mid-navigation. It never caches API responses,
+JS/CSS bundles, or auth tokens, so it can't ever serve a stale duty/demand figure or a
+stale build: every audit engine call and every asset always goes to the network.
 
 ### Without Docker
 

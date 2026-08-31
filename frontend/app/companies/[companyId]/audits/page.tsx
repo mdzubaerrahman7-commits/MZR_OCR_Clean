@@ -43,12 +43,12 @@ export default function CompanyAuditsPage() {
 
   return (
     <AppShell>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <Link href="/companies" className="text-sm text-muted-foreground underline">
             ← Companies
           </Link>
-          <h1 className="text-xl font-semibold">{company ? company.name : "…"} — Audits</h1>
+          <h1 className="text-xl font-semibold break-words">{company ? company.name : "…"} — Audits</h1>
         </div>
         <Button size="sm" onClick={() => setShowForm((v) => !v)}>
           {showForm ? "Cancel" : "New audit"}
@@ -151,7 +151,7 @@ function NewAuditForm({ companyId, onCreated }: { companyId: string; onCreated: 
         <CardTitle>New audit</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="audit_code">Audit code</Label>
             <Input id="audit_code" value={auditCode} onChange={(e) => setAuditCode(e.target.value)} required />
@@ -177,11 +177,11 @@ function NewAuditForm({ companyId, onCreated }: { companyId: string; onCreated: 
             <Input id="ent_end" type="date" value={entEnd} onChange={(e) => setEntEnd(e.target.value)} required />
           </div>
           {error && (
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <Alert>{error}</Alert>
             </div>
           )}
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <Button type="submit" disabled={submitting}>
               {submitting ? "Creating…" : "Create audit"}
             </Button>
