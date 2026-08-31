@@ -17,6 +17,7 @@ from decimal import Decimal
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
+from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
 HEADER_FONT = Font(bold=True)
@@ -87,8 +88,11 @@ def _write_header(sheet: Worksheet, row: int, headers: list[str]) -> None:
 
 
 def _autosize(sheet: Worksheet, headers: list[str]) -> None:
+    # Column letters are computed from the column index directly rather than read off
+    # a row-1 cell: row 1 holds the merged report title, so every column past the
+    # first is a MergedCell there, which doesn't expose `.column_letter`.
     for col, header in enumerate(headers, start=1):
-        sheet.column_dimensions[sheet.cell(row=1, column=col).column_letter].width = max(12, len(header) + 2)
+        sheet.column_dimensions[get_column_letter(col)].width = max(12, len(header) + 2)
 
 
 def _report_title(sheet: Worksheet, title: str, span: int) -> None:

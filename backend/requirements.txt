@@ -7,6 +7,11 @@ pydantic[email]==2.10.4
 pydantic-settings==2.7.1
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
+# passlib 1.7.4 (unmaintained since 2020) self-tests bcrypt with a >72-byte secret at
+# import time; bcrypt>=4.1 made that raise ValueError instead of truncating, which
+# breaks passlib's backend detection entirely. Pin to the last version before that
+# behavior change until passlib is replaced or catches up.
+bcrypt==4.0.1
 python-multipart==0.0.20
 pandas==2.2.3
 openpyxl==3.1.5
