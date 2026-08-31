@@ -5,6 +5,11 @@ RUN npm install
 
 FROM node:20-alpine AS builder
 WORKDIR /app
+# Next.js inlines NEXT_PUBLIC_* variables into the client bundle at build time, not
+# read from the environment at runtime — it has to be a build arg, not just an env
+# var on the running container.
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build

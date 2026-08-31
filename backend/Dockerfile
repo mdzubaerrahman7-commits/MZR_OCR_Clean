@@ -11,4 +11,7 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Runs migrations before serving, and binds to $PORT when the host platform sets one
+# (e.g. Render) — falls back to 8000 for docker-compose / a plain `docker run`, which
+# matches the port both of those already expect.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

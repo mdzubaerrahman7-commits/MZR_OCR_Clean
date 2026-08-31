@@ -34,6 +34,32 @@ docker-compose.yml   Postgres + backend + frontend for local development
 .github/workflows/ci.yml   Backend pytest + frontend build/typecheck
 ```
 
+## Live deployment (Render)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/mdzubaerrahman7-commits/MZR_OCR_Clean)
+
+The fastest way to a real, public, installable URL — no server of your own, no
+credentials to hand anyone. `render.yaml` at the repo root is a
+[Render Blueprint](https://render.com/docs/blueprint-spec) that provisions all three
+pieces (backend web service, frontend web service, Postgres database) wired together
+automatically. Click the button, sign in with GitHub, click "Apply" — Render builds
+both Dockerfiles and gives you a `https://bondaudit-frontend-xxxx.onrender.com`
+(or similar) URL a few minutes later. Open that URL on your phone or laptop and
+install it as described below.
+
+**Free-tier caveats worth knowing before you rely on it:**
+- Free web services spin down after ~15 minutes idle — the first request after that
+  takes 30–60s to wake back up (later requests are fast).
+- The free Postgres database is deleted after 90 days. For anything longer-lived,
+  upgrade it to a paid plan in the Render dashboard before then, or point
+  `DATABASE_URL` at a different Postgres provider.
+- This blueprint has not been deployed and watched end-to-end from this environment
+  (no Render account was available here) — treat your first "Apply" the same way the
+  first CI run was treated: the real first test. If a service fails to build or
+  boot, Render's own build/deploy logs (visible in its dashboard) are the place to
+  start; the most likely failure points are the `NEXT_PUBLIC_API_URL` cross-service
+  reference and the Postgres connection string, both spelled out in `render.yaml`.
+
 ## Running locally
 
 ### With Docker (recommended)
