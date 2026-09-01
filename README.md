@@ -47,18 +47,22 @@ both Dockerfiles and gives you a `https://bondaudit-frontend-xxxx.onrender.com`
 (or similar) URL a few minutes later. Open that URL on your phone or laptop and
 install it as described below.
 
+The browser only ever talks to the frontend's own origin — every `/api/*` request is
+proxied server-side to the backend (`frontend/next.config.mjs`), so there's no
+cross-origin/CORS configuration to get right and no build-time variable that has to
+make it into the client bundle correctly.
+
 **Free-tier caveats worth knowing before you rely on it:**
 - Free web services spin down after ~15 minutes idle — the first request after that
   takes 30–60s to wake back up (later requests are fast).
 - The free Postgres database is deleted after 90 days. For anything longer-lived,
   upgrade it to a paid plan in the Render dashboard before then, or point
   `DATABASE_URL` at a different Postgres provider.
-- This blueprint has not been deployed and watched end-to-end from this environment
-  (no Render account was available here) — treat your first "Apply" the same way the
-  first CI run was treated: the real first test. If a service fails to build or
-  boot, Render's own build/deploy logs (visible in its dashboard) are the place to
-  start; the most likely failure points are the `NEXT_PUBLIC_API_URL` cross-service
-  reference and the Postgres connection string, both spelled out in `render.yaml`.
+- If a service fails to build or boot, Render's own build/deploy logs (in its
+  dashboard) are the place to start; the most likely failure point is the
+  `INTERNAL_API_URL` cross-service reference on the frontend service (Environment
+  tab) or the Postgres connection string, both spelled out with comments in
+  `render.yaml`.
 
 ## Running locally
 
