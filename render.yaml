@@ -32,13 +32,9 @@ services:
         value: local
       - key: STORAGE_LOCAL_ROOT
         value: /data/evidence_storage
-      # Demo-deployment simplification, not a production default: the frontend never
-      # sends cookies (bearer-token auth via an explicit Authorization header), so a
-      # wide-open origin list can't be used to steal a session the way it could for a
-      # cookie-authenticated app. Lock this to the frontend's exact origin instead if
-      # this ever becomes more than a try-it-out deployment.
-      - key: CORS_ORIGINS
-        value: '["*"]'
+      # No CORS_ORIGINS override needed: the browser only ever calls the frontend's
+      # own origin (see frontend/next.config.mjs's rewrite proxy below), so the
+      # backend never receives a cross-origin browser request in this deployment.
 
   - type: web
     name: bondaudit-frontend
@@ -47,10 +43,12 @@ services:
     dockerContext: ./frontend
     plan: free
     envVars:
-      # Render's cross-service references only ever resolve to a bare hostname
-      # (never a scheme) — frontend/lib/api.ts prefixes https:// itself when the
-      # value it's given doesn't already start with a scheme.
-      - key: NEXT_PUBLIC_API_URL
+      # Read server-side, at request time, by this Next.js server's rewrite proxy
+      # (next.config.mjs) — never shipped to the browser, so unlike a NEXT_PUBLIC_*
+      # variable it doesn't depend on anything being threaded through the Docker
+      # build correctly. Render's cross-service references only ever resolve to a
+      # bare hostname (never a scheme); next.config.mjs prefixes https:// itself.
+      - key: INTERNAL_API_URL
         fromService:
           type: web
           name: bondaudit-backend
