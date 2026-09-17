@@ -18,6 +18,11 @@ class UserOut(TimestampedORMBase):
     is_active: bool
 
 
+class PasswordResetRequest(BaseModel):
+    new_password: str = Field(min_length=8)
+    reason: str | None = None
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str

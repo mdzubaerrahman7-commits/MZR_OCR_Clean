@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth";
+import { useAuth, hasPermissionHint } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -27,6 +27,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             BondAudit <span className="text-muted-foreground font-normal">— Import Audit</span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
+            {hasPermissionHint(user.role, ["administrator"]) && (
+              <Link href="/users" className="text-muted-foreground hover:text-foreground">
+                Users
+              </Link>
+            )}
             <span className="hidden text-muted-foreground sm:inline">
               {user.full_name} · <span className="uppercase">{user.role}</span>
             </span>

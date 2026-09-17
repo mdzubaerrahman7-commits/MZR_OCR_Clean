@@ -90,6 +90,12 @@ export const api = {
     bootstrapAdmin: (email: string, password: string, full_name: string) =>
       request<User>("/api/auth/bootstrap-admin", { method: "POST", body: JSON.stringify({ email, password, full_name }) }),
     me: () => request<User>("/api/auth/me"),
+    listUsers: () => request<User[]>("/api/auth/users"),
+    resetPassword: (userId: string, newPassword: string, reason?: string) =>
+      request<User>(`/api/auth/users/${userId}/reset-password`, {
+        method: "POST",
+        body: JSON.stringify({ new_password: newPassword, reason }),
+      }),
   },
 
   companies: {
