@@ -1,6 +1,24 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def normalize_database_url(url: str) -> str:
+    """Rewrite a driver-less PostgreSQL URL to explicitly use the psycopg (3.x) driver.
+
+    Render (and most other hosts) inject DATABASE_URL as `postgres://...` or
+    `postgresql://...`. SQLAlchemy's default dialect for both of those is psycopg2,
+    which this project does not install (it pins `psycopg[binary]` — psycopg 3.x, per
+    requirements.txt and .env.example) — left unrewritten, engine creation fails with
+    `ModuleNotFoundError: No module named 'psycopg2'`. Any URL that already names a
+    driver (`postgresql+psycopg://`, `sqlite://`, ...) is passed through unchanged.
+    """
+    if url.startswith("postgres://"):
+        return "postgresql+psycopg://" + url[len("postgres://") :]
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg://" + url[len("postgresql://") :]
+    return url
 
 
 class Settings(BaseSettings):
@@ -18,6 +36,11 @@ class Settings(BaseSettings):
     environment: str = "development"
 
     database_url: str = "sqlite:///./bondaudit_dev.db"
+
+    @field_validator("database_url")
+    @classmethod
+    def _normalize_database_url(cls, v: str) -> str:
+        return normalize_database_url(v)
 
     jwt_secret_key: str = "dev-only-secret-change-me"
     jwt_algorithm: str = "HS256"
